@@ -1,7 +1,9 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
+from django.forms import CheckboxSelectMultiple
 
-from taxi.models import Driver
+from taxi.models import Driver, Car, Manufacturer
 
 
 class DriverCreationForm(UserCreationForm):
@@ -40,3 +42,14 @@ class DriverLicenseUpdateForm(forms.ModelForm):
                 "Last five characters should be digits"
             )
         return license_number
+
+
+class CarForm(forms.ModelForm):
+    drivers = forms.ModelMultipleChoiceField(
+        queryset=get_user_model().objects.all(),
+        widget=CheckboxSelectMultiple(),
+        required=False)
+
+    class Meta:
+        model = Car
+        fields = "__all__"
