@@ -65,7 +65,6 @@ class CarDetailView(LoginRequiredMixin, generic.DetailView):
 
 class CarCreateView(LoginRequiredMixin, generic.CreateView):
     model = Car
-    # fields = "__all__"
     success_url = reverse_lazy("taxi:car-list")
     form_class = CarForm
 
@@ -88,7 +87,7 @@ class DriverListView(LoginRequiredMixin, generic.ListView):
 
 class DriverDetailView(LoginRequiredMixin, generic.DetailView):
     model = Driver
-    queryset = Driver.objects.all().prefetch_related("cars__manufacturer")
+    queryset = Driver.objects.prefetch_related("cars__manufacturer")
 
 
 class DriverCreateView(LoginRequiredMixin, generic.CreateView):
@@ -112,7 +111,7 @@ class DriverUpdateView(LoginRequiredMixin, generic.UpdateView):
 def assign_or_delete_car(request, pk):
     car = get_object_or_404(Car, id=pk)
     driver = request.user
-    if car in driver.cars.all():
+    if driver.cars.filter(id=pk).exist():
         driver.cars.remove(car)
     else:
         driver.cars.add(car)
