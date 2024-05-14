@@ -48,7 +48,8 @@ class CarForm(forms.ModelForm):
     drivers = forms.ModelMultipleChoiceField(
         queryset=get_user_model().objects.all(),
         widget=CheckboxSelectMultiple(),
-        required=False)
+        required=False,
+    )
 
     class Meta:
         model = Car
